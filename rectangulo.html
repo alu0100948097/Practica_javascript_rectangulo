@@ -1,0 +1,157 @@
+<html>
+    <body>
+        <canvas style="border: 1px solid black" id="canvas" width="640" height="480"></canvas>
+        <br><br>
+        Numero de objetos: <input type="text" id="items" />
+        <button type="button" onclick="create()">Enviar</button>
+        <br><br>
+        Velocidad en el eje x: <input type="text" id="v_x" />
+        <button type="button" onclick="change_v_x()">Enviar</button>
+        <br><br>
+        Velocidad en el eje y: <input type="text" id="v_y" />
+        <button type="button" onclick="change_v_y()">Enviar</button>
+    </body>
+</html>
+<script>
+    const tam = 10;
+    var canvas = document.getElementById('canvas');
+    var Pizarra = canvas.getContext('2d');
+    var width = canvas.width-tam
+    var height = canvas.height-tam
+
+    function Borrar()
+    {
+        Pizarra.clearRect(0,0,canvas.width,canvas.height);
+    }
+
+    function get_items()
+    {
+        var items = document.getElementById("items").value;
+        return items;
+    }
+
+    function x()
+    {
+        var num = Math.floor((Math.random() * width) + 1);
+        return num;
+    }
+
+    function y()
+    {
+        var num = Math.floor((Math.random() * height) + 1);
+        return num;
+    }
+
+    function random_speed()
+    {
+        var num = Math.floor((Math.random() * 60) + 20);
+        return num;
+    }
+
+    function color()
+    {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+    class Rectangulo
+    {
+        constructor()
+        {
+            this.x = x();
+            this.y = y();
+            this.color = color ();
+            Pizarra.lineWidth=2;
+        }
+
+        Pintar()
+        {
+            Pizarra.strokeStyle=this.color;
+            Pizarra.strokeRect(this.x,this.y,tam,tam);
+            Pizarra.stroke();
+        }
+
+        Mover()
+        {
+            if((this.x+v_x)>width || (this.x+v_x)<0)
+            {
+                v_x*=-1;
+            }
+            
+            if((this.y+v_y)>height || (this.y+v_y)<0)
+            {
+                v_y*=-1;
+            }
+            
+            this.x+=v_x;
+            this.y+=v_y;
+            
+        }
+
+    }
+
+    var Elementos = [];
+    var items = 50;
+    var loc = document.location.href;
+    if (loc.split('?')[1]!=null)
+    {
+        items=loc.split('?')[1];
+    }
+    var v_x = random_speed();
+    var v_y = random_speed();
+    
+    function change_v_x()
+    {
+        if(v_x<0)
+        {
+            v_x=(document.getElementById('v_x').value)*-1;
+        }
+        else
+        {
+            v_x=document.getElementById('v_x').value;
+        }
+    }
+
+    function change_v_y()
+    {
+        if(v_y<0)
+        {
+            v_y=(document.getElementById('v_y').value)*-1;
+        }
+        else
+        {
+            v_y=document.getElementById('v_y').value;
+        }
+    }
+
+    for (var i=0; i<items; i++)
+    {
+        Elementos[i] = new Rectangulo();
+    }
+
+    function create()
+    {
+        items = document.getElementById('items').value;
+        for (var i=0; i<items; i++)
+        {
+            Elementos[i] = new Rectangulo();
+        }
+    }
+
+    function Engine()
+    {
+        Borrar();
+        for (var i=0; i<items; i++)
+        {
+            Elementos[i].Mover();
+            Elementos[i].Pintar();
+        }
+    }
+
+    var Timmings = window.setInterval(function(){ Engine() },1000);
+    
+</script>
