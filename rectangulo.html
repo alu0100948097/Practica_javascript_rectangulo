@@ -21,7 +21,9 @@
 
     function Borrar()
     {
+        Pizarra.beginPath();
         Pizarra.clearRect(0,0,canvas.width,canvas.height);
+        Pizarra.closePath();
     }
 
     function get_items()
@@ -94,6 +96,44 @@
 
     }
 
+class Circulo
+{
+    constructor()
+    {
+        this.x = x();
+        this.y = y();
+        this.color = color ();
+        Pizarra.lineWidth=2;
+    }
+    
+    Pintar()
+    {
+        Pizarra.strokeStyle=this.color;
+        Pizarra.beginPath();
+        Pizarra.arc(this.x,this.y,tam,0,10);
+        Pizarra.closePath();
+        Pizarra.stroke();
+    }
+    
+    Mover()
+    {
+        if((this.x+v_x+tam-40)>width || (this.x+v_x)<0)
+        {
+            v_x*=-1;
+        }
+        
+        if((this.y+v_y+tam-40)>height || (this.y+v_y)<0)
+        {
+            v_y*=-1;
+        }
+        
+        this.x+=v_x;
+        this.y+=v_y;
+        
+    }
+    
+}
+
     var Elementos = [];
     var items = 50;
     var loc = document.location.href;
@@ -128,17 +168,26 @@
         }
     }
 
-    for (var i=0; i<items; i++)
+    for (var i=0; i<items/2; i++)
     {
         Elementos[i] = new Rectangulo();
+    }
+
+    for (var i=items/2; i<items; i++)
+    {
+        Elementos[i] = new Circulo();
     }
 
     function create()
     {
         items = document.getElementById('items').value;
-        for (var i=0; i<items; i++)
+        for (var i=0; i<items/2; i++)
         {
             Elementos[i] = new Rectangulo();
+        }
+        for (var i=items/2; i<items; i++)
+        {
+            Elementos[i] = new Circulo();
         }
     }
 
